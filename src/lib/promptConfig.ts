@@ -24,7 +24,7 @@ export interface PromptTemplate {
 export const PROMPT_TEMPLATES: PromptTemplate[] = [
     {
         id: 'code',
-        label: { ja: 'コード生成', en: 'Code Generation' },
+        label: { ja: 'システム / アプリ開発', en: 'System / App Development' },
         vibeCodingDefault: true,
         description: {
             ja: '特定の機能やアプリのための、本番品質のコードを生成します。',
@@ -188,28 +188,38 @@ export const PROMPT_TEMPLATES: PromptTemplate[] = [
     },
     {
         id: 'review',
-        label: { ja: '設計 / コードレビュー', en: 'Design/Code Review' },
+        label: { ja: 'レビュー / チェックリスト作成', en: 'Code/Design Review & Checklist' },
         vibeCodingDefault: false,
         description: {
-            ja: 'ベストプラクティスに基づいてレビューを行います。',
-            en: 'Review a design or code for best practices.'
+            ja: 'コードや設計のレビュー、またはレビュー用チェックリストの作成を依頼します。',
+            en: 'Request a code/design review or create a review checklist.'
         },
         systemRole: {
-            ja: 'プリンシパルエンジニア',
-            en: 'Principal Engineer'
+            ja: 'プリンシパルエンジニア / QAスペシャリスト',
+            en: 'Principal Engineer & QA Specialist'
         },
         fields: [
             {
+                id: 'type',
+                label: { ja: '依頼タイプ', en: 'Request Type' },
+                type: 'select',
+                options: [
+                    { value: 'review', label: { ja: 'コード/設計のレビュー', en: 'Perform Review' } },
+                    { value: 'checklist', label: { ja: 'レビュー用チェックリスト作成', en: 'Create Checklist' } }
+                ]
+            },
+            {
                 id: 'content',
-                label: { ja: 'レビュー対象', en: 'Content to Review' },
+                label: { ja: '対象コンテンツ', en: 'Target Content' },
                 type: 'textarea',
-                placeholder: { ja: 'コード、アーキテクチャ図、テキストなどを貼り付け...', en: 'Paste code, architecture or text...' }
+                placeholder: { ja: 'ここにレビュー対象のテキストデータ（コード、仕様書の概要など）を貼り付けてください。※ファイルアップロード機能はありません', en: 'Paste the text content here (code snippet, specs, etc.). File upload is not supported.' }
             },
             {
                 id: 'criteria',
-                label: { ja: 'レビュー基準', en: 'Review Criteria' },
+                label: { ja: '重点確認項目', en: 'Review Criteria' },
                 type: 'textarea',
-                placeholder: { ja: '拡張性、セキュリティ、可読性などを重視...', en: 'Focus on scalability, security, etc.' }
+                defaultValue: '誤字脱字、体裁の統一、命名規則、セキュリティ、パフォーマンス、可読性',
+                placeholder: { ja: '特定の観点があれば追加してください...', en: 'Add specific criteria if needed...' }
             }
         ]
     },
@@ -264,45 +274,40 @@ export const PROMPT_TEMPLATES: PromptTemplate[] = [
     },
     {
         id: 'planning',
-        label: { ja: '企画・計画 / チェックリスト作成', en: 'Planning & Checklists' },
+        label: { ja: '企画・提案 / アイデア出し', en: 'Planning & Proposal' },
         vibeCodingDefault: false,
         description: {
-            ja: 'タスクの抜け漏れを防ぐためのチェックリストや、実施計画を作成します。',
-            en: 'Create checklists, roadmaps, or implementation plans to ensure nothing is missed.'
+            ja: '新規プロジェクトの企画、アイデア出し、提案書の構成案などを依頼します。',
+            en: 'Brainstorm ideas, plan new projects, or draft proposal structures.'
         },
         systemRole: {
-            ja: 'プロジェクトマネージャー / QAリード',
-            en: 'Project Manager & QA Lead'
+            ja: 'プロジェクトマネージャー / クリエイティブディレクター',
+            en: 'Project Manager & Creative Director'
         },
         fields: [
             {
-                id: 'target',
-                label: { ja: '対象・トピック', en: 'Target Subject' },
+                id: 'theme',
+                label: { ja: 'テーマ・お題', en: 'Theme / Topic' },
                 type: 'text',
-                placeholder: { ja: '例: 新機能のリリース手順、コードレビュー', en: 'e.g. Release Process, Code Review' }
+                placeholder: { ja: '例: 新しいスマホアプリの企画、社内イベント', en: 'e.g. New App Idea, Company Event' }
             },
             {
-                id: 'artifact',
-                label: { ja: '作成するもの', en: 'Output Artifact' },
-                type: 'select',
-                options: [
-                    { value: 'checklist', label: { ja: 'チェックリスト', en: 'Checklist' } },
-                    { value: 'roadmap', label: { ja: 'ロードマップ / スケジュール', en: 'Roadmap / Schedule' } },
-                    { value: 'test_cases', label: { ja: 'テストケース一覧', en: 'Test Cases' } },
-                    { value: 'flowchart', label: { ja: 'フローチャート（Mermaid記述）', en: 'Flowchart (Mermaid)' } }
-                ]
-            },
-            {
-                id: 'users',
-                label: { ja: '利用者 / ターゲット', en: 'Intended Audience' },
+                id: 'target_audience',
+                label: { ja: 'ターゲット層', en: 'Target Audience' },
                 type: 'text',
-                placeholder: { ja: '例: 開発チーム全員、新人エンジニア', en: 'e.g. Dev Team, Junior Developers' }
+                placeholder: { ja: '例: 20代女性、エンジニア', en: 'e.g. 20s Female, Engineers' }
             },
             {
-                id: 'items',
-                label: { ja: '考慮すべき項目・メモ', en: 'Items to Consider' },
+                id: 'goal',
+                label: { ja: '企画のゴール', en: 'Goal' },
                 type: 'textarea',
-                placeholder: { ja: '- インフラ確認を含める\n- セキュリティ重視で', en: '- Include infra checks\n- Focus on security' }
+                placeholder: { ja: '例: ユーザー数1万人、チームの結束強化', en: 'e.g. 10k Users, Team Bonding' }
+            },
+            {
+                id: 'requirements',
+                label: { ja: '要件・制約メモ', en: 'Requirements / Notes' },
+                type: 'textarea',
+                placeholder: { ja: '予算感、必須機能など...', en: 'Budget, Must-have features...' }
             }
         ]
     },

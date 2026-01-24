@@ -36,11 +36,26 @@ export const generateMetaPrompt = (
         ? `- **タスクの目的**: ${template.description.ja}\n`
         : `- **Objective**: ${template.description.en}\n`;
 
+    // Special logic for Review Template to differentiate Review vs Checklist
+    if (template.id === 'review' && formData['type']) {
+        const type = formData['type'];
+        if (type === 'checklist') {
+            prompt += isJa
+                ? `- **重要**: コードの修正案ではなく、「チェックリスト形式」で出力してください。\n`
+                : `- **Important**: Output as a "Checklist", not a code correction.\n`;
+        } else {
+            prompt += isJa
+                ? `- **重要**: 具体的な修正案と、修正後のコード例を提示してください。\n`
+                : `- **Important**: Provide specific correction proposals and code examples.\n`;
+        }
+    }
+
     // 3. User Input Context
     prompt += isJa ? `\n## ユーザーの入力情報（これを踏まえて作成してください）\n` : `\n## User Input Context (Incorporate this)\n`;
 
     template.fields.forEach(field => {
-        const value = formData[field.id];
+        // Use formData value, fallback to defaultValue if exists
+        const value = formData[field.id] || field.defaultValue;
         if (value && value.trim()) {
             const label = isJa ? field.label.ja : field.label.en;
             prompt += `- **${label}**: ${value}\n`;

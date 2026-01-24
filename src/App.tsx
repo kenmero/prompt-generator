@@ -14,6 +14,7 @@ function App() {
   const [formData, setFormData] = useState<Record<string, string>>({});
   const [result, setResult] = useState('');
   const [isVibeCoding, setIsVibeCoding] = useState(PROMPT_TEMPLATES[0].vibeCodingDefault);
+  const [showInfo, setShowInfo] = useState(false);
 
   // Localization Dictionary for Static UI
   const UI_TEXT = {
@@ -25,7 +26,12 @@ function App() {
     configure: { ja: 'プロンプト設定', en: 'Configure Prompt' },
     goalLabel: { ja: '目的を選択', en: 'What is your Goal?' },
     generateBtn: { ja: 'メタプロンプトを生成', en: 'Generate Meta-Prompt' },
-    vibeLabel: { ja: 'Vibe Coding モード 🚀', en: 'Vibe Coding Mode 🚀' }
+    vibeLabel: { ja: 'Vibe Coding モード 🚀', en: 'Vibe Coding Mode 🚀' },
+    infoTitle: { ja: 'このツールについて', en: 'About this Tool' },
+    infoDesc: {
+      ja: 'このツールは、ChatGPTやGeminiなどのLLMに対して「私の代わりにシステムプロンプトを作ってください」と依頼するための指示文（メタプロンプト）を作成します。生成された文章をLLMに送信することで、専門的な知識がなくても高品質なプロンプトを入手できます。',
+      en: 'This tool generates a "Meta-Prompt" — a request asking an LLM to write a System Prompt for you. Copy the output and send it to ChatGPT/Gemini to get a high-quality prompt without needing prompt engineering skills.'
+    },
   };
 
   // Derive current template
@@ -77,7 +83,50 @@ function App() {
       <div style={{ textAlign: 'center', marginBottom: '3rem', paddingTop: '3rem' }}>
         <h1 className="gradient-text" style={{ fontSize: '3.5rem', marginBottom: '1rem', letterSpacing: '-0.02em', lineHeight: 1.2 }}>
           {UI_TEXT.title[lang]}
+          <span
+            style={{
+              fontSize: '1.5rem',
+              verticalAlign: 'super',
+              marginLeft: '0.5rem',
+              cursor: 'pointer',
+              color: 'hsl(var(--color-primary))',
+              border: '1px solid currentColor',
+              borderRadius: '50%',
+              width: '24px',
+              height: '24px',
+              display: 'inline-flex',
+              alignItems: 'center',
+              justifyContent: 'center'
+            }}
+            onClick={() => setShowInfo(!showInfo)}
+            onMouseEnter={() => setShowInfo(true)}
+            onMouseLeave={() => setShowInfo(false)}
+            title="Info"
+          >
+            ?
+          </span>
         </h1>
+
+        {/* Info Popover */}
+        <div style={{
+          maxWidth: '600px',
+          margin: '0 auto',
+          background: 'rgba(30, 41, 59, 0.9)',
+          backdropFilter: 'blur(10px)',
+          border: '1px solid var(--glass-border)',
+          borderRadius: 'var(--radius-md)',
+          padding: '1rem',
+          marginBottom: '2rem',
+          display: showInfo ? 'block' : 'none',
+          animation: 'fadeIn 0.2s ease-out',
+          textAlign: 'left'
+        }}>
+          <h3 style={{ marginBottom: '0.5rem', color: 'hsl(var(--color-primary))' }}>{UI_TEXT.infoTitle[lang]}</h3>
+          <p style={{ fontSize: '0.95rem', lineHeight: '1.6', color: 'hsl(var(--color-text-base))' }}>
+            {UI_TEXT.infoDesc[lang]}
+          </p>
+        </div>
+
         <p style={{ fontSize: '1.2rem', color: 'hsl(var(--color-text-muted))' }}>
           {UI_TEXT.subtitle[lang]}
         </p>
