@@ -359,6 +359,12 @@ export const PROMPT_TEMPLATES: PromptTemplate[] = [
                 label: { ja: 'R: Response (出力形式)', en: 'R: Response Format' },
                 type: 'text',
                 placeholder: { ja: '例: JSON、Markdownの表、箇条書き', en: 'e.g. JSON, Markdown Table, Bullet points' }
+            },
+            {
+                id: 'examples',
+                label: { ja: 'Examples (実例・Few-Shot)', en: 'Examples / Few-Shot' },
+                type: 'textarea',
+                placeholder: { ja: '入力と出力のペアを提示すると精度が向上します...\n入力: ...\n出力: ...', en: 'Provide examples to improve accuracy...\nInput: ...\nOutput: ...' }
             }
         ]
     },
@@ -404,6 +410,12 @@ export const PROMPT_TEMPLATES: PromptTemplate[] = [
                 label: { ja: 'E: Experiment (試行範囲・制約)', en: 'E: Experiment / Constraints' },
                 type: 'textarea',
                 placeholder: { ja: '例: 複数の選択肢を提示して、特定の単語は禁止', en: 'e.g. Give multiple options, avoid certain words' }
+            },
+            {
+                id: 'examples',
+                label: { ja: 'Examples (実例・Few-Shot)', en: 'Examples / Few-Shot' },
+                type: 'textarea',
+                placeholder: { ja: '成功パターンの例を提示してください...', en: 'Provide examples of successful patterns...' }
             }
         ]
     },
@@ -438,6 +450,12 @@ export const PROMPT_TEMPLATES: PromptTemplate[] = [
                 label: { ja: '出力形式', en: 'Output Format' },
                 type: 'text',
                 placeholder: { ja: '例: JSON形式、Markdownの表', en: 'e.g. JSON, Markdown Table' }
+            },
+            {
+                id: 'examples',
+                label: { ja: '実例 (Few-Shot)', en: 'Examples / Few-Shot' },
+                type: 'textarea',
+                placeholder: { ja: '例: 良い回答例など', en: 'e.g. Good response examples' }
             }
         ]
     }
