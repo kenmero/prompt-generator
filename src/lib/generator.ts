@@ -43,8 +43,8 @@ export const generateMetaPrompt = (
             : `\n## IMPORTANT: Apply CO-STAR Framework\nPlease interpret the user input below as elements of the **CO-STAR Framework (Context, Objective, Style, Tone, Audience, Response)** and create a prompt that strictly reflects them.\n`;
     } else if (template.id === 'crispe') {
         prompt += isJa
-            ? `\n## 重要: CRISPEフレームワークの適用\n以下の入力情報を、**CRISPEフレームワーク (Capacity, Insight, Statement, Personality, Experiment)** の各要素として解釈し、最適化されたプロンプトを作成してください。\n`
-            : `\n## IMPORTANT: Apply CRISPE Framework\nPlease interpret the user input below as elements of the **CRISPE Framework (Capacity, Insight, Statement, Personality, Experiment)** and create an optimized prompt.\n`;
+            ? `\n## 重要: CRISPEフレームワークの適用\n以下の入力情報を、**CRISPEフレームワーク (Capacity, Role, Insight, Statement, Personality, Experiment)** の各要素として解釈し、最適化されたプロンプトを作成してください。\n`
+            : `\n## IMPORTANT: Apply CRISPE Framework\nPlease interpret the user input below as elements of the **CRISPE Framework (Capacity, Role, Insight, Statement, Personality, Experiment)** and create an optimized prompt.\n`;
     }
 
 
