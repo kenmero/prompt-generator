@@ -62,7 +62,14 @@ export const generateMetaPrompt = (
         }
     }
 
-    // 3. User Input Context
+    // 3. Examples (Few-Shot Prompting) - NEW! based on OpenAI Gap Analysis
+    const examples = formData['examples'];
+    if (examples && examples.trim()) {
+        prompt += isJa ? `\n## 参考事例 (Few-Shot Examples)\n` : `\n## Examples (Few-Shot)\n`;
+        prompt += examples + '\n';
+    }
+
+    // 4. User Input Context
     prompt += isJa ? `\n## ユーザーの入力情報（これを踏まえて作成してください）\n` : `\n## User Input Context (Incorporate this)\n`;
 
     template.fields.forEach(field => {
