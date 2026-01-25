@@ -312,6 +312,103 @@ export const PROMPT_TEMPLATES: PromptTemplate[] = [
         ]
     },
     {
+        id: 'costar',
+        label: { ja: 'CO-STAR フレームワーク', en: 'CO-STAR Framework' },
+        vibeCodingDefault: false,
+        description: {
+            ja: '文脈、目的、文体などを明確に定義し、ビジネス文書や指示の品質を劇的に向上させます。',
+            en: 'Define Context, Objective, Style, etc. to dramatically improve the quality of business docs and instructions.'
+        },
+        systemRole: {
+            ja: '数々の賞を受賞したビジネス・コミュニケーションの専門家',
+            en: 'Award-winning Business Communication Expert'
+        },
+        fields: [
+            {
+                id: 'context',
+                label: { ja: 'C: Context (背景・文脈)', en: 'C: Context' },
+                type: 'textarea',
+                placeholder: { ja: '私が誰で、どんな状況にあるか...', en: 'Who I am, what is the situation...' }
+            },
+            {
+                id: 'objective',
+                label: { ja: 'O: Objective (目的)', en: 'O: Objective' },
+                type: 'textarea',
+                placeholder: { ja: '何を達成したいか...', en: 'What do you want to achieve...' }
+            },
+            {
+                id: 'style',
+                label: { ja: 'S: Style (文体)', en: 'S: Style' },
+                type: 'text',
+                placeholder: { ja: '例: ビジネスライク、親しみやすく、Appleの広告風', en: 'e.g. Business-like, Friendly, Like an Apple Ad' }
+            },
+            {
+                id: 'tone',
+                label: { ja: 'T: Tone (トーン)', en: 'T: Tone' },
+                type: 'text',
+                placeholder: { ja: '例: 断定的、共感的、情熱的', en: 'e.g. Assertive, Empathetic, Passionate' }
+            },
+            {
+                id: 'audience',
+                label: { ja: 'A: Audience (対象読者)', en: 'A: Audience' },
+                type: 'text',
+                placeholder: { ja: '例: 初心者、経営層、5歳の子供', en: 'e.g. Beginners, Executives, A 5-year-old' }
+            },
+            {
+                id: 'response',
+                label: { ja: 'R: Response (出力形式)', en: 'R: Response Format' },
+                type: 'text',
+                placeholder: { ja: '例: JSON、Markdownの表、箇条書き', en: 'e.g. JSON, Markdown Table, Bullet points' }
+            }
+        ]
+    },
+    {
+        id: 'crispe',
+        label: { ja: 'CRISPE フレームワーク', en: 'CRISPE Framework' },
+        vibeCodingDefault: false,
+        description: {
+            ja: '複雑な役割定義や、創造的なタスクに最適化されたフレームワークです。',
+            en: 'Optimized framework for complex role definitions and creative tasks.'
+        },
+        systemRole: {
+            ja: '適応力の高いエキスパートAI',
+            en: 'Highly Adaptive Expert AI'
+        },
+        fields: [
+            {
+                id: 'capacity',
+                label: { ja: 'C: Capacity (役割・能力)', en: 'C: Capacity & Role' },
+                type: 'text',
+                placeholder: { ja: '例: あなたは〇〇の専門家として振る舞ってください', en: 'e.g. Act as an expert in...' }
+            },
+            {
+                id: 'insight',
+                label: { ja: 'I: Insight (背景情報・洞察)', en: 'I: Insight & Context' },
+                type: 'textarea',
+                placeholder: { ja: '必要な背景情報、データの詳細など...', en: 'Background info, data details...' }
+            },
+            {
+                id: 'statement',
+                label: { ja: 'S: Statement (命令)', en: 'S: Statement' },
+                type: 'textarea',
+                placeholder: { ja: '具体的に何をしてほしいか...', en: 'What specifically do you want done...' }
+            },
+            {
+                id: 'personality',
+                label: { ja: 'P: Personality (スタイル・人格)', en: 'P: Personality' },
+                type: 'text',
+                placeholder: { ja: '例: 辛口で、ユーモアを交えて', en: 'e.g. Witty, Sarcastic, Professional' }
+            },
+            {
+                id: 'experiment',
+                label: { ja: 'E: Experiment (試行範囲・制約)', en: 'E: Experiment / Constraints' },
+                type: 'textarea',
+                placeholder: { ja: '例: 複数の選択肢を提示して、特定の単語は禁止', en: 'e.g. Give multiple options, avoid certain words' }
+            }
+        ]
+    },
+
+    {
         id: 'custom',
         label: { ja: 'カスタム（自由設定）', en: 'Custom / Universal' },
         vibeCodingDefault: true,

@@ -36,6 +36,18 @@ export const generateMetaPrompt = (
         ? `- **タスクの目的**: ${template.description.ja}\n`
         : `- **Objective**: ${template.description.en}\n`;
 
+    // 2.5 Framework Specific Instructions
+    if (template.id === 'costar') {
+        prompt += isJa
+            ? `\n## 重要: CO-STARフレームワークの適用\n以下の入力情報を、**CO-STARフレームワーク (Context, Objective, Style, Tone, Audience, Response)** の各要素として解釈し、それらを厳密に反映したプロンプトを作成してください。\n`
+            : `\n## IMPORTANT: Apply CO-STAR Framework\nPlease interpret the user input below as elements of the **CO-STAR Framework (Context, Objective, Style, Tone, Audience, Response)** and create a prompt that strictly reflects them.\n`;
+    } else if (template.id === 'crispe') {
+        prompt += isJa
+            ? `\n## 重要: CRISPEフレームワークの適用\n以下の入力情報を、**CRISPEフレームワーク (Capacity, Insight, Statement, Personality, Experiment)** の各要素として解釈し、最適化されたプロンプトを作成してください。\n`
+            : `\n## IMPORTANT: Apply CRISPE Framework\nPlease interpret the user input below as elements of the **CRISPE Framework (Capacity, Insight, Statement, Personality, Experiment)** and create an optimized prompt.\n`;
+    }
+
+
     // Special logic for Review Template to differentiate Review vs Checklist
     if (template.id === 'review' && formData['type']) {
         const type = formData['type'];
