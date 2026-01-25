@@ -9,7 +9,7 @@
 - **多様なテンプレート**: アプリ開発、バグ修正、学習計画など、目的別のテンプレートを用意。
 - **フレームワーク対応 (New!)**: 
     - **CO-STAR**: Context, Objective, Style, Tone, Audience, Response
-    - **CRISPE**: Capacity, Role, Insight, Statement, Personality, Experiment
+    - **CRISPE**: Capacity & Role, Insight, Statement, Personality, Experiment
 - **Vibe Coding モード**: 余計な挨拶を省き、即座にコードを出力させる「高速実装」向けの指示を自動挿入。
 - **マルチ言語対応**: 日本語 / 英語 をワンクリックで切り替え可能。
 
