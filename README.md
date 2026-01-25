@@ -1,73 +1,88 @@
-# React + TypeScript + Vite
+# Prompt Generator 🚀
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+**Prompt Generator** は、ChatGPTやGeminiなどのLLM（大規模言語モデル）の能力を最大限に引き出すための「メタプロンプト」を作成するWebアプリケーションです。
 
-Currently, two official plugins are available:
+専門的なプロンプトエンジニアリングの知識がなくても、目的に応じた項目（`promptConfig.ts`で定義）を埋めるだけで、高品質なシステムプロンプトを生成できます。Vibe Codingの原則に基づいた「高速実装モード」や、**CO-STAR / CRISPE** といった高度なフレームワークにも対応しています。
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 🛠 Features
 
-## React Compiler
+- **多様なテンプレート**: アプリ開発、バグ修正、学習計画など、目的別のテンプレートを用意。
+- **フレームワーク対応 (New!)**: 
+    - **CO-STAR**: Context, Objective, Style, Tone, Audience, Response
+    - **CRISPE**: Capacity, Insight, Statement, Personality, Experiment
+- **Vibe Coding モード**: 余計な挨拶を省き、即座にコードを出力させる「高速実装」向けの指示を自動挿入。
+- **マルチ言語対応**: 日本語 / 英語 をワンクリックで切り替え可能。
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## 🚀 Quick Start (Local Setup)
 
-## Expanding the ESLint configuration
+### Prerequisites
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- Node.js (v18 or higher recommended)
+- npm (v9 or higher)
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+### Installation
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/kenmero/prompt-generator.git
+   cd prompt-generator
+   ```
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+
+3. Start the development server:
+   ```bash
+   npm run dev
+   ```
+
+4. Open your browser:
+   Access `http://localhost:5173` to see the app running.
+
+## 🏗 Architecture & Tech Stack
+
+このプロジェクトは、モダンで軽量なフロントエンドスタックを採用しています。
+
+### Tech Stack
+- **Framework**: [React](https://react.dev/) (v18)
+- **Language**: [TypeScript](https://www.typescriptlang.org/)
+- **Build Tool**: [Vite](https://vitejs.dev/)
+- **Styling**: Vanilla CSS (CSS Variables for themes, Flexbox/Grid for layout) - No heavy UI frameworks.
+
+### Directory Structure
+
+```
+prompt-generator/
+├── src/
+│   ├── components/       # Reusable UI components
+│   │   ├── Card.tsx      # Main wrapper styled component
+│   │   ├── Button.tsx
+│   │   ├── DynamicForm.tsx # Renders inputs based on template config
+│   │   └── ...
+│   ├── lib/              # Core Logic
+│   │   ├── promptConfig.ts # 🌟 Template Definitions (Add new frameworks here)
+│   │   └── generator.ts    # ⚙️ Logic to combine inputs into a prompt
+│   ├── App.tsx           # Main Application Layout & State Management
+│   └── main.tsx          # Entry point
+├── public/               # Static assets
+└── package.json
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### 主なロジックフロー
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+1. **テンプレート選択**: ユーザーがテンプレートを選択します（`promptConfig.ts`で定義）。
+2. **フォーム描画**: `DynamicForm` コンポーネントが、選択されたテンプレートのスキーマに基づいて入力フィールドを動的に描画します。
+3. **プロンプト生成**: 「生成」ボタンが押されると、`generator.ts` 内の `generateMetaPrompt` 関数が呼び出されます。
+   - AIのペルソナ、目的、ユーザーの入力内容を結合し、構造化されたMarkdown形式のプロンプトを作成します。
+   - Vibe Codingモードやフレームワーク（CO-STAR/CRISPE）が有効な場合、それぞれの特有の指示条件を条件付きで注入します。
+4. **出力**: 生成されたプロンプトが `PromptPreview` に表示され、ワンクリックでコピーできます。
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+## 🤝 Contributing
+
+新しいプロンプトテンプレートの追加は非常に簡単です！
+`src/lib/promptConfig.ts` に新しいオブジェクトを追加するだけで、自動的にUIに反映されます。
+
+---
+Created by kenmero
