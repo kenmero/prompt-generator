@@ -383,15 +383,9 @@ export const PROMPT_TEMPLATES: PromptTemplate[] = [
         fields: [
             {
                 id: 'capacity',
-                label: { ja: 'C: Capacity (能力・権限)', en: 'C: Capacity' },
+                label: { ja: 'CR: Capacity & Role (能力・役割)', en: 'CR: Capacity & Role' },
                 type: 'text',
-                placeholder: { ja: '例: 編集者としての権限を持つ、Pythonの知識がある', en: 'e.g. Has editing rights, Knows Python' }
-            },
-            {
-                id: 'role',
-                label: { ja: 'R: Role (役割)', en: 'R: Role' },
-                type: 'text',
-                placeholder: { ja: '例: 辛口の批評家として振る舞ってください', en: 'e.g. Act as a harsh critic' }
+                placeholder: { ja: '例: あなたは〇〇の専門家であり、辛口の批評家として振る舞ってください', en: 'e.g. Act as an expert in X and behave as a harsh critic' }
             },
             {
                 id: 'insight',
