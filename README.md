@@ -70,14 +70,14 @@ prompt-generator/
 └── package.json
 ```
 
-### Key Logic Flow
+### 主なロジックフロー
 
-1. **Template Selection**: User selects a template (defined in `promptConfig.ts`).
-2. **Form Rendering**: `DynamicForm` renders fields dynamically based on the selected template's schema.
-3. **Generation**: When "Generate" is clicked, `generateMetaPrompt` inside `generator.ts` is called.
-   - It combines the system persona, goal description, and user inputs into a structured Markdown prompt.
-   - It conditionally injects Vibe Coding instructions or Framework (CO-STAR/CRISPE) rules.
-4. **Output**: The result is displayed in `PromptPreview` for easy copying.
+1. **テンプレート選択**: ユーザーがテンプレートを選択します（`promptConfig.ts`で定義）。
+2. **フォーム描画**: `DynamicForm` コンポーネントが、選択されたテンプレートのスキーマに基づいて入力フィールドを動的に描画します。
+3. **プロンプト生成**: 「生成」ボタンが押されると、`generator.ts` 内の `generateMetaPrompt` 関数が呼び出されます。
+   - AIのペルソナ、目的、ユーザーの入力内容を結合し、構造化されたMarkdown形式のプロンプトを作成します。
+   - Vibe Codingモードやフレームワーク（CO-STAR/CRISPE）が有効な場合、それぞれの特有の指示条件を条件付きで注入します。
+4. **出力**: 生成されたプロンプトが `PromptPreview` に表示され、ワンクリックでコピーできます。
 
 ## 🤝 Contributing
 
