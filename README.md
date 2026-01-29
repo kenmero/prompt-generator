@@ -6,8 +6,14 @@
 
 ## 🛠 Features
 
-- **多様なテンプレート**: アプリ開発、バグ修正、学習計画など、目的別のテンプレートを用意。
-- **フレームワーク対応 (New!)**: 
+- **2つのモード (Phase) (New!)**:
+    - **🚀 Initial (初回作成)**: システムプロンプトを一から作成。
+    - **🔄 Refinement (修正・追加QA)**: 既存の文脈を踏まえた、追加指示やQA用のプロンプトを作成。
+- **多様なテンプレート**:
+    - **Initial**: アプリ開発 (目的重視)、企画、記事執筆など。
+    - **Refinement**: バグ修正、コード改善、機能追加、QA。
+- **Few-Shot 対応 (New!)**: 「出力例 (Output Example)」を入力することで、AIに特定のフォーマットを強制させる指示を自動生成。
+- **フレームワーク対応**: 
     - **CO-STAR**: Context, Objective, Style, Tone, Audience, Response
     - **CRISPE**: Capacity & Role, Insight, Statement, Personality, Experiment
 - **Vibe Coding モード**: 余計な挨拶を省き、即座にコードを出力させる「高速実装」向けの指示を自動挿入。

@@ -9,79 +9,109 @@ export const generateMetaPrompt = (
 ): string => {
     const isJa = lang === 'ja';
 
-    // 1. Meta-Role: Who we are asking to write the prompt?
-    // We are asking ChatGPT to be a "Prompt Engineer".
+    // 1. Meta-Role Definition
     let prompt = isJa
         ? `あなたは世界最高峰のプロンプトエンジニアです。\n`
         : `You are a world-class Prompt Engineer.\n`;
 
-    prompt += isJa
-        ? `以下の要件に基づき、AIエージェントに対して指示するための**最高のシステムプロンプト**を作成してください。\n\n`
-        : `Based on the requirements below, please create the **ultimate System Prompt** to instruct an AI agent.\n\n`;
-
-    // 2. Target Role & Goal
-    // Who the final AI should act as.
-    const customRole = formData['custom_role'];
-    const targetRole = (customRole && customRole.trim())
-        ? customRole
-        : (isJa ? template.systemRole.ja : template.systemRole.en);
-
-    prompt += isJa ? `## 作成するプロンプトの要件\n` : `## Requirements for the Prompt\n`;
-
-    prompt += isJa
-        ? `- **AIの役割**: ${targetRole}\n`
-        : `- **Target AI Role**: ${targetRole}\n`;
-
-    prompt += isJa
-        ? `- **タスクの目的**: ${template.description.ja}\n`
-        : `- **Objective**: ${template.description.en}\n`;
-
-    // 2.5 Framework Specific Instructions
-    if (template.id === 'costar') {
+    // ==========================================
+    // Phase Dispatch
+    // ==========================================
+    if (template.phase === 'refinement') {
+        // --- REFINEMENT MODE ---
         prompt += isJa
-            ? `\n## 重要: CO-STARフレームワークの適用\n以下の入力情報を、**CO-STARフレームワーク (Context, Objective, Style, Tone, Audience, Response)** の各要素として解釈し、それらを厳密に反映したプロンプトを作成してください。\n`
-            : `\n## IMPORTANT: Apply CO-STAR Framework\nPlease interpret the user input below as elements of the **CO-STAR Framework (Context, Objective, Style, Tone, Audience, Response)** and create a prompt that strictly reflects them.\n`;
-    } else if (template.id === 'crispe') {
+            ? `以下の状況に基づき、AIアシスタントに対して「${template.label.ja}」を依頼するための、**具体的かつ効果的な指示プロンプト**を作成してください。\n` +
+            `このプロンプトは、すでに進行中の会話や、既存のコードがある状態で送信することを想定しています。\n\n`
+            : `Based on the context below, please create a **specific and effective instruction prompt** to ask an AI Assistant to "${template.label.en}".\n` +
+            `Assume this prompt will be sent in an ongoing conversation or with existing code context.\n\n`;
+
+        prompt += isJa ? `## 入力情報 (Context & Request)\n` : `## Input Data (Context & Request)\n`;
+
+        template.fields.forEach(field => {
+            const value = formData[field.id] || field.defaultValue;
+            if (value && value.trim()) {
+                const label = isJa ? field.label.ja : field.label.en;
+                prompt += `- **${label}**: ${value}\n`;
+            }
+        });
+
+        prompt += `\n`;
+        prompt += isJa ? `## 作成するプロンプトの要件\n` : `## Requirements for the Generated Prompt\n`;
         prompt += isJa
-            ? `\n## 重要: CRISPEフレームワークの適用\n以下の入力情報を、**CRISPEフレームワーク (Capacity & Role, Insight, Statement, Personality, Experiment)** の各要素として解釈し、最適化されたプロンプトを作成してください。\n`
-            : `\n## IMPORTANT: Apply CRISPE Framework\nPlease interpret the user input below as elements of the **CRISPE Framework (Capacity & Role, Insight, Statement, Personality, Experiment)** and create an optimized prompt.\n`;
-    }
+            ? `- 文脈（Context）と依頼（Instruction）を明確に分けること。\n` +
+            `- **出力形式の指定**がある場合は、それを厳密に守らせるためのFew-Shot（出力例）を含めること。\n`
+            : `- Clearly separate Context and Instruction.\n` +
+            `- If an **Output Format/Example** is provided, include it as a Few-Shot example to strictly enforce the format.\n`;
 
+    } else {
+        // --- INITIAL MODE ---
+        prompt += isJa
+            ? `以下の要件に基づき、AIエージェントに対して指示するための**最高のシステムプロンプト**を作成してください。\n\n`
+            : `Based on the requirements below, please create the **ultimate System Prompt** to instruct an AI agent.\n\n`;
 
-    // Special logic for Review Template to differentiate Review vs Checklist
-    if (template.id === 'review' && formData['type']) {
-        const type = formData['type'];
-        if (type === 'checklist') {
+        const customRole = formData['custom_role'];
+        const targetRole = (customRole && customRole.trim())
+            ? customRole
+            : (template.systemRole ? (isJa ? template.systemRole.ja : template.systemRole.en) : 'AI Assistant');
+
+        prompt += isJa ? `## 作成するプロンプトの要件\n` : `## Requirements for the Prompt\n`;
+        prompt += isJa
+            ? `- **AIの役割**: ${targetRole}\n`
+            : `- **Target AI Role**: ${targetRole}\n`;
+        prompt += isJa
+            ? `- **タスクの目的**: ${template.description.ja}\n`
+            : `- **Objective**: ${template.description.en}\n`;
+
+        prompt += isJa
+            ? `- **出力形式**: 出力例（Output Example）やフォーマットが指定されている場合は、それを厳密に守るよう指示に含めてください。\n`
+            : `- **Output Format**: If an Output Example or Format is provided, strictly include it in the instructions.\n`;
+
+        // Framework Specifics
+        if (template.id === 'costar') {
             prompt += isJa
-                ? `- **重要**: コードの修正案ではなく、「チェックリスト形式」で出力してください。\n`
-                : `- **Important**: Output as a "Checklist", not a code correction.\n`;
-        } else {
+                ? `\n## 重要: CO-STARフレームワークの適用\n以下の入力情報を、**CO-STARフレームワーク (Context, Objective, Style, Tone, Audience, Response)** の各要素として解釈し、それらを厳密に反映したプロンプトを作成してください。\n`
+                : `\n## IMPORTANT: Apply CO-STAR Framework\nPlease interpret the user input below as elements of the **CO-STAR Framework (Context, Objective, Style, Tone, Audience, Response)** and create a prompt that strictly reflects them.\n`;
+        } else if (template.id === 'crispe') {
             prompt += isJa
-                ? `- **重要**: 具体的な修正案と、修正後のコード例を提示してください。\n`
-                : `- **Important**: Provide specific correction proposals and code examples.\n`;
+                ? `\n## 重要: CRISPEフレームワークの適用\n以下の入力情報を、**CRISPEフレームワーク (Capacity & Role, Insight, Statement, Personality, Experiment)** の各要素として解釈し、最適化されたプロンプトを作成してください。\n`
+                : `\n## IMPORTANT: Apply CRISPE Framework\nPlease interpret the user input below as elements of the **CRISPE Framework (Capacity & Role, Insight, Statement, Personality, Experiment)** and create an optimized prompt.\n`;
         }
+
+        // Review Template Specifics
+        if (template.id === 'review' && formData['type']) {
+            const type = formData['type'];
+            if (type === 'checklist') {
+                prompt += isJa
+                    ? `- **重要**: コードの修正案ではなく、「チェックリスト形式」で出力してください。\n`
+                    : `- **Important**: Output as a "Checklist", not a code correction.\n`;
+            } else {
+                prompt += isJa
+                    ? `- **重要**: 具体的な修正案と、修正後のコード例を提示してください。\n`
+                    : `- **Important**: Provide specific correction proposals and code examples.\n`;
+            }
+        }
+
+        // Examples (Few-Shot)
+        const examples = formData['examples'];
+        if (examples && examples.trim()) {
+            prompt += isJa ? `\n## 参考事例 (Few-Shot Examples)\n` : `\n## Examples (Few-Shot)\n`;
+            prompt += examples + '\n';
+        }
+
+        // User Input Context
+        prompt += isJa ? `\n## ユーザーの入力情報（これを踏まえて作成してください）\n` : `\n## User Input Context (Incorporate this)\n`;
+        template.fields.forEach(field => {
+            const value = formData[field.id] || field.defaultValue;
+            if (value && value.trim()) {
+                const label = isJa ? field.label.ja : field.label.en;
+                prompt += `- **${label}**: ${value}\n`;
+            }
+        });
     }
 
-    // 3. Examples (Few-Shot Prompting) - NEW! based on OpenAI Gap Analysis
-    const examples = formData['examples'];
-    if (examples && examples.trim()) {
-        prompt += isJa ? `\n## 参考事例 (Few-Shot Examples)\n` : `\n## Examples (Few-Shot)\n`;
-        prompt += examples + '\n';
-    }
-
-    // 4. User Input Context
-    prompt += isJa ? `\n## ユーザーの入力情報（これを踏まえて作成してください）\n` : `\n## User Input Context (Incorporate this)\n`;
-
-    template.fields.forEach(field => {
-        // Use formData value, fallback to defaultValue if exists
-        const value = formData[field.id] || field.defaultValue;
-        if (value && value.trim()) {
-            const label = isJa ? field.label.ja : field.label.en;
-            prompt += `- **${label}**: ${value}\n`;
-        }
-    });
-
-    // 4. Vibe Coding / Style Instructions
+    // ==========================================
+    // Common: Vibe Coding & Final Output
+    // ==========================================
     prompt += `\n`;
     if (isVibeCoding) {
         prompt += isJa ? `## 【重要】Vibe Coding モードの適用\n` : `## [IMPORTANT] Apply Vibe Coding Mode\n`;
@@ -99,7 +129,6 @@ export const generateMetaPrompt = (
             `- Fill in missing details automatously to reduce back-and-forth.\n` +
             `- Always output Production Ready code.\n`;
     } else {
-        // Standard / Learning Plan Mode
         prompt += isJa ? `## 出力スタイルの指定\n` : `## Output Style Instructions\n`;
         prompt += isJa
             ? `作成するプロンプトは、以下のスタイルをAIに指示するものにしてください：\n` +
@@ -112,11 +141,10 @@ export const generateMetaPrompt = (
             `- Ask clarifying questions if necessary.\n`;
     }
 
-    // 5. Final Output Directive
     prompt += `\n`;
     prompt += isJa
-        ? `## 成果物\n上記の要件を全て満たす、実用的で高品質なシステムプロンプトのみをMarkdownコードブロックで出力してください。解説は不要です。`
-        : `## Final Output\nPlease output ONLY the resulting high-quality System Prompt in a Markdown code block. No explanation needed.`;
+        ? `## 成果物\n上記の要件を全て満たす、実用的で高品質なプロンプトのみをMarkdownコードブロックで出力してください。解説は不要です。`
+        : `## Final Output\nPlease output ONLY the resulting high-quality Prompt in a Markdown code block. No explanation needed.`;
 
     return prompt;
 };
