@@ -12,18 +12,22 @@ export interface PromptField {
     defaultValue?: string;
 }
 
+export type PromptPhase = 'initial' | 'refinement';
+
 export interface PromptTemplate {
     id: string;
+    phase: PromptPhase;
     label: LocalizedString;
     vibeCodingDefault: boolean;
     description: LocalizedString;
-    systemRole: LocalizedString;
+    systemRole?: LocalizedString; // Optional for refinement
     fields: PromptField[];
 }
 
 export const PROMPT_TEMPLATES: PromptTemplate[] = [
     {
         id: 'code',
+        phase: 'initial',
         label: { ja: 'システム / アプリ開発', en: 'System / App Development' },
         vibeCodingDefault: true,
         description: {
@@ -36,110 +40,37 @@ export const PROMPT_TEMPLATES: PromptTemplate[] = [
         },
         fields: [
             {
-                id: 'language',
-                label: { ja: '使用言語', en: 'Language(s)' },
-                type: 'text',
-                placeholder: { ja: '例: TypeScript, Python, Rust', en: 'e.g. TypeScript, Python, Rust' }
-            },
-            {
-                id: 'framework',
-                label: { ja: 'フレームワーク / スタック', en: 'Framework / Stack' },
-                type: 'text',
-                placeholder: { ja: '例: Next.js, FastAPI, Shadcn UI', en: 'e.g. Next.js, FastAPI, Shadcn UI' }
-            },
-            {
                 id: 'goal',
-                label: { ja: '何を作りたいですか？', en: 'What do you want to build?' },
+                label: { ja: '開発のゴール / アプリ概要', en: 'Project Goal / App Description' },
                 type: 'textarea',
-                placeholder: { ja: '機能やアプリの詳細を記述してください...', en: 'Describe the feature or application in detail...' },
+                placeholder: { ja: '何を作りたいか、アプリの全体像を詳しく記述...', en: 'Describe the app or feature you want to build...' },
                 defaultValue: ''
             },
             {
-                id: 'constraints',
-                label: { ja: '制約条件', en: 'Key Constraints' },
+                id: 'features',
+                label: { ja: '主要な機能要件', en: 'Key Features' },
                 type: 'textarea',
-                placeholder: { ja: '- 外部ライブラリ禁止\n- Tailwind必須...', en: '- No external heavy libs\n- Must use Tailwind...' }
+                placeholder: { ja: '- ログイン機能\n- リアルタイムチャット\n- ダークモード対応...', en: '- Auth\n- Real-time chat\n- Dark mode...' }
+            },
+            {
+                id: 'tech_stack',
+                label: { ja: '技術スタック / 制約条件', en: 'Tech Stack / Constraints' },
+                type: 'textarea',
+                placeholder: { ja: 'React, TypeScript, TailwindCSS, AWSなど', en: 'React, TS, Tailwind, AWS etc.' }
+            },
+            {
+                id: 'output_example',
+                label: { ja: '出力例 (Few-Shot/Style)', en: 'Output Example / Style' },
+                type: 'textarea',
+                placeholder: { ja: '期待するコードの書き方や応答のスタイル...', en: 'Preferred coding style or response format...' }
             }
         ]
     },
-    {
-        id: 'bugfix',
-        label: { ja: 'バグ修正 / デバッグ', en: 'Bug Fix / Debugging' },
-        vibeCodingDefault: true,
-        description: {
-            ja: 'エラーやバグの原因を特定し、修正します。',
-            en: 'Diagnose and fix a specific error or bug.'
-        },
-        systemRole: {
-            ja: 'デバッグのスペシャリスト',
-            en: 'Expert Debugging Specialist'
-        },
-        fields: [
-            {
-                id: 'context',
-                label: { ja: 'テックスタック', en: 'Tech Stack' },
-                type: 'text',
-                placeholder: { ja: '例: React 18, Node.js 20', en: 'e.g. React 18, Node.js 20' }
-            },
-            {
-                id: 'error',
-                label: { ja: 'エラーログ', en: 'Error Logs' },
-                type: 'textarea',
-                placeholder: { ja: 'エラーメッセージやスタックトレースを貼り付けてください...', en: 'Paste the error message or stack trace here...' }
-            },
-            {
-                id: 'code',
-                label: { ja: '問題のコード', en: 'Problematic Code' },
-                type: 'textarea',
-                placeholder: { ja: '関連するコードスニペットを貼り付けてください...', en: 'Paste the relevant code snippet...' }
-            },
-            {
-                id: 'behavior',
-                label: { ja: '現状の挙動 vs 期待する挙動', en: 'Current vs Expected Behavior' },
-                type: 'textarea',
-                placeholder: { ja: 'Xをクリックすると落ちるが、Yが開くべき...', en: 'It crashes when I click X, but should open Y...' }
-            }
-        ]
-    },
-    {
-        id: 'refactor',
-        label: { ja: 'コードリファクタリング', en: 'Code Refactoring' },
-        vibeCodingDefault: true,
-        description: {
-            ja: '既存のコードを最適化・整理します。',
-            en: 'Optimize and clean up existing code.'
-        },
-        systemRole: {
-            ja: 'シニアコード品質エンジニア',
-            en: 'Senior Code Quality Engineer'
-        },
-        fields: [
-            {
-                id: 'language',
-                label: { ja: '言語', en: 'Language' },
-                type: 'text'
-            },
-            {
-                id: 'code',
-                label: { ja: 'リファクタリング対象コード', en: 'Code to Refactor' },
-                type: 'textarea',
-                placeholder: { ja: 'コードをここに貼り付け...', en: 'Paste code here...' }
-            },
-            {
-                id: 'focus',
-                label: { ja: '重点ポイント', en: 'Refactoring Focus' },
-                type: 'select',
-                options: [
-                    { value: 'performance', label: { ja: 'パフォーマンス', en: 'Performance' } },
-                    { value: 'readability', label: { ja: '可読性・クリーンコード', en: 'Readability & Clean Code' } },
-                    { value: 'security', label: { ja: 'セキュリティ', en: 'Security' } },
-                    { value: 'modernization', label: { ja: 'モダナイズ（最新化）', en: 'Modernization (Updates)' } }
-                ]
-            }
-        ]
-    },
+    // Removed bugfix_initial (Use Refinement > Fix Bug)
+    // Removed refactor_initial (Use Refinement > Refine Code)
     {
         id: 'writing',
+        phase: 'initial',
         label: { ja: '技術記事 / ドキュメント作成', en: 'Technical Writing' },
         vibeCodingDefault: false,
         description: {
@@ -183,11 +114,18 @@ export const PROMPT_TEMPLATES: PromptTemplate[] = [
                 label: { ja: '含めるべきポイント', en: 'Key Points to Cover' },
                 type: 'textarea',
                 placeholder: { ja: '- はじめに\n- インストール方法\n- 使い方...', en: '- Intro\n- Installation\n- Usage...' }
+            },
+            {
+                id: 'output_example',
+                label: { ja: '出力例 (Few-Shot/Style)', en: 'Output Example / Style' },
+                type: 'textarea',
+                placeholder: { ja: '記事のトーンやスタイル、構成の例...', en: 'Tone, style, or structure example...' }
             }
         ]
     },
     {
         id: 'review',
+        phase: 'initial',
         label: { ja: 'レビュー / チェックリスト作成', en: 'Code/Design Review & Checklist' },
         vibeCodingDefault: false,
         description: {
@@ -220,11 +158,18 @@ export const PROMPT_TEMPLATES: PromptTemplate[] = [
                 type: 'textarea',
                 defaultValue: '誤字脱字、体裁の統一、命名規則、セキュリティ、パフォーマンス、可読性',
                 placeholder: { ja: '特定の観点があれば追加してください...', en: 'Add specific criteria if needed...' }
+            },
+            {
+                id: 'output_example',
+                label: { ja: '出力例 (Few-Shot)', en: 'Output Example' },
+                type: 'textarea',
+                placeholder: { ja: '期待する指摘の仕方やレポート形式...', en: 'Expected report format or style...' }
             }
         ]
     },
     {
         id: 'learning',
+        phase: 'initial',
         label: { ja: '学習計画 / ロードマップ作成', en: 'Learning & Study Plan' },
         vibeCodingDefault: false,
         description: {
@@ -269,11 +214,18 @@ export const PROMPT_TEMPLATES: PromptTemplate[] = [
                     { value: 'theoretical', label: { ja: '理論重視（基礎からじっくり）', en: 'Theoretical (Deep dive)' } },
                     { value: 'certification', label: { ja: '資格取得向け', en: 'Certification Focus' } }
                 ]
+            },
+            {
+                id: 'output_example',
+                label: { ja: '出力例 (Few-Shot)', en: 'Output Example' },
+                type: 'textarea',
+                placeholder: { ja: '期待するカリキュラムの形式...', en: 'Expected curriculum format...' }
             }
         ]
     },
     {
         id: 'planning',
+        phase: 'initial',
         label: { ja: '企画・提案 / アイデア出し', en: 'Planning & Proposal' },
         vibeCodingDefault: false,
         description: {
@@ -308,11 +260,18 @@ export const PROMPT_TEMPLATES: PromptTemplate[] = [
                 label: { ja: '要件・制約メモ', en: 'Requirements / Notes' },
                 type: 'textarea',
                 placeholder: { ja: '予算感、必須機能など...', en: 'Budget, Must-have features...' }
+            },
+            {
+                id: 'output_example',
+                label: { ja: '出力例 (Few-Shot)', en: 'Output Example' },
+                type: 'textarea',
+                placeholder: { ja: 'アイデアの提示形式や企画書の構成例...', en: 'Output format example...' }
             }
         ]
     },
     {
         id: 'costar',
+        phase: 'initial',
         label: { ja: 'CO-STAR フレームワーク', en: 'CO-STAR Framework' },
         vibeCodingDefault: false,
         description: {
@@ -370,6 +329,7 @@ export const PROMPT_TEMPLATES: PromptTemplate[] = [
     },
     {
         id: 'crispe',
+        phase: 'initial',
         label: { ja: 'CRISPE フレームワーク', en: 'CRISPE Framework' },
         vibeCodingDefault: false,
         description: {
@@ -422,6 +382,7 @@ export const PROMPT_TEMPLATES: PromptTemplate[] = [
 
     {
         id: 'custom',
+        phase: 'initial',
         label: { ja: 'カスタム（自由設定）', en: 'Custom / Universal' },
         vibeCodingDefault: true,
         description: {
@@ -456,6 +417,121 @@ export const PROMPT_TEMPLATES: PromptTemplate[] = [
                 label: { ja: '実例 (Few-Shot)', en: 'Examples / Few-Shot' },
                 type: 'textarea',
                 placeholder: { ja: '例: 良い回答例など', en: 'e.g. Good response examples' }
+            }
+        ]
+    },
+    // --- Refinement Templates ---
+    {
+        id: 'refine_code',
+        phase: 'refinement',
+        label: { ja: '✨ コード改善 / 最適化', en: 'Refine / Optimize Code' },
+        vibeCodingDefault: true,
+        description: {
+            ja: '既存のコードを改善します（パフォーマンス、可読性、セキュリティなど）。',
+            en: 'Improve existing code (Performance, Readability, Security, etc).'
+        },
+        fields: [
+            {
+                id: 'code',
+                label: { ja: '現在のコード', en: 'Current Code' },
+                type: 'textarea',
+                placeholder: { ja: '改善したいコードを貼り付けてください...', en: 'Paste the code to refine...' }
+            },
+            {
+                id: 'goal',
+                label: { ja: '改善のゴール', en: 'Optimization Goal' },
+                type: 'text',
+                placeholder: { ja: '例: 実行速度の向上、可読性の向上、最新構文への書き換え', en: 'e.g. Improve speed, Better readability, Modern syntax' }
+            },
+            {
+                id: 'output_example',
+                label: { ja: '出力例 (Few-Shot/Format)', en: 'Output Example / Format' },
+                type: 'textarea',
+                placeholder: { ja: '期待する出力形式や例を入力 (例: 変更点のみのdiff形式、コメント付きのフルコード等)', en: 'Expected format or example (e.g. Diff only, Full code with comments)' }
+            }
+        ]
+    },
+    {
+        id: 'fix_bug',
+        phase: 'refinement',
+        label: { ja: '🐛 バグ修正 / エラー対応', en: 'Fix Bug / Resolve Error' },
+        vibeCodingDefault: true,
+        description: {
+            ja: '発生しているエラーやバグを修正するための指示を作成します。',
+            en: 'Create instructions to fix a specific bug or error.'
+        },
+        fields: [
+            {
+                id: 'context',
+                label: { ja: '状況 / 文脈', en: 'Context (What happened)' },
+                type: 'textarea',
+                placeholder: { ja: 'どのような操作をしたか、現在のコードの概要など...', en: 'What you did, summary of current code...' }
+            },
+            {
+                id: 'error_log',
+                label: { ja: 'エラーメッセージ / ログ', en: 'Error Message / Log' },
+                type: 'textarea',
+                placeholder: { ja: 'エラーログを貼り付けてください...', en: 'Paste the error log...' }
+            },
+            {
+                id: 'output_example',
+                label: { ja: '出力形式の希望', en: 'Desired Output Format' },
+                type: 'text',
+                placeholder: { ja: '例: 原因の解説と修正コード、修正箇所のdiffのみ', en: 'e.g. Explanation + Fix, Diff only' }
+            }
+        ]
+    },
+    {
+        id: 'add_feature',
+        phase: 'refinement',
+        label: { ja: '➕ 機能追加', en: 'Add Feature' },
+        vibeCodingDefault: true,
+        description: {
+            ja: '既存のコードやプロジェクトに新しい機能を追加します。',
+            en: 'Add a new feature to existing code or project.'
+        },
+        fields: [
+            {
+                id: 'context',
+                label: { ja: '現在の文脈 / コード', en: 'Current Context / Code' },
+                type: 'textarea',
+                placeholder: { ja: '関連する既存コードや現状の説明...', en: 'Existing code or current state...' }
+            },
+            {
+                id: 'feature_desc',
+                label: { ja: '追加したい機能の詳細', en: 'New Feature Description' },
+                type: 'textarea',
+                placeholder: { ja: 'どのような機能を追加したいか具体的に...', en: 'Describe the feature in detail...' }
+            },
+            {
+                id: 'output_example',
+                label: { ja: '出力例 (Few-Shot)', en: 'Output Example / Format' },
+                type: 'textarea',
+                placeholder: { ja: '期待する実装のイメージや形式...', en: 'Expected implementation style or format...' }
+            }
+        ]
+    },
+    {
+        id: 'qa_explain',
+        phase: 'refinement',
+        label: { ja: '❓ 質問 / 解説 (QA)', en: 'Question / Explanation' },
+        vibeCodingDefault: false,
+        description: {
+            ja: 'コードや概念について質問したり、解説を求めます。',
+            en: 'Ask questions or request explanations about code/concepts.'
+        },
+        fields: [
+            {
+                id: 'target',
+                label: { ja: '対象のトピック / コード', en: 'Target Topic / Code' },
+                type: 'textarea',
+                placeholder: { ja: '解説してほしいコードや用語...', en: 'Code or term to explain...' }
+            },
+            {
+                id: 'question',
+                label: { ja: '具体的な質問内容', en: 'Specific Question' },
+                type: 'textarea',
+                placeholder: { ja: '何について知りたいですか？ (例: この関数の計算ロジックは？)', en: 'What do you want to know? (e.g. How does this logic work?)' }
             }
         ]
     }

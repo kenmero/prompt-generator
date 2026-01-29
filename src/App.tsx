@@ -5,12 +5,19 @@ import { Select } from './components/Select';
 import { DynamicForm } from './components/DynamicForm';
 import { PromptPreview } from './components/PromptPreview';
 import { PROMPT_TEMPLATES } from './lib/promptConfig';
-import type { Language } from './lib/promptConfig';
+import type { Language, PromptPhase } from './lib/promptConfig';
 import { generateMetaPrompt } from './lib/generator';
 
 function App() {
   const [lang, setLang] = useState<Language>('ja');
-  const [selectedTemplateId, setSelectedTemplateId] = useState(PROMPT_TEMPLATES[0].id);
+  const [phase, setPhase] = useState<PromptPhase>('initial');
+
+  // Filter templates by phase
+  const phaseTemplates = useMemo(() =>
+    PROMPT_TEMPLATES.filter(t => t.phase === phase),
+    [phase]);
+
+  const [selectedTemplateId, setSelectedTemplateId] = useState(phaseTemplates[0].id);
   const [formData, setFormData] = useState<Record<string, string>>({});
   const [result, setResult] = useState('');
   const [isVibeCoding, setIsVibeCoding] = useState(PROMPT_TEMPLATES[0].vibeCodingDefault);
@@ -36,8 +43,17 @@ function App() {
 
   // Derive current template
   const currentTemplate = useMemo(() =>
-    PROMPT_TEMPLATES.find(t => t.id === selectedTemplateId) || PROMPT_TEMPLATES[0]
-    , [selectedTemplateId]);
+    PROMPT_TEMPLATES.find(t => t.id === selectedTemplateId) || phaseTemplates[0]
+    , [selectedTemplateId, phaseTemplates]);
+
+  // Handle phase change
+  const handlePhaseChange = (newPhase: PromptPhase) => {
+    setPhase(newPhase);
+    const newTemplates = PROMPT_TEMPLATES.filter(t => t.phase === newPhase);
+    if (newTemplates.length > 0) {
+      handleTemplateChange(newTemplates[0].id);
+    }
+  };
 
   // Handle template change
   const handleTemplateChange = (newId: string) => {
@@ -150,12 +166,48 @@ function App() {
           </div>
         </div>
 
+        {/* Phase Switcher */}
+        <div style={{ display: 'flex', gap: '1rem', marginBottom: '1.5rem', background: 'rgba(15, 23, 42, 0.5)', padding: '0.5rem', borderRadius: 'var(--radius-sm)' }}>
+          <button
+            onClick={() => handlePhaseChange('initial')}
+            style={{
+              flex: 1,
+              padding: '0.5rem',
+              borderRadius: 'var(--radius-sm)',
+              border: 'none',
+              background: phase === 'initial' ? 'hsl(var(--color-primary))' : 'transparent',
+              color: phase === 'initial' ? '#000' : 'hsl(var(--color-text-base))',
+              fontWeight: phase === 'initial' ? 700 : 400,
+              cursor: 'pointer',
+              transition: 'all 0.2s ease'
+            }}
+          >
+            🚀 {lang === 'ja' ? '初回プロンプト' : 'Initial Prompt'}
+          </button>
+          <button
+            onClick={() => handlePhaseChange('refinement')}
+            style={{
+              flex: 1,
+              padding: '0.5rem',
+              borderRadius: 'var(--radius-sm)',
+              border: 'none',
+              background: phase === 'refinement' ? 'hsl(var(--color-primary))' : 'transparent',
+              color: phase === 'refinement' ? '#000' : 'hsl(var(--color-text-base))',
+              fontWeight: phase === 'refinement' ? 700 : 400,
+              cursor: 'pointer',
+              transition: 'all 0.2s ease'
+            }}
+          >
+            🔄 {lang === 'ja' ? '修正・追加 (QA)' : 'Refinement / QA'}
+          </button>
+        </div>
+
         <div style={{ marginBottom: '2rem' }}>
           <Select
             label={UI_TEXT.goalLabel[lang]}
             value={selectedTemplateId}
             onChange={(e) => handleTemplateChange(e.target.value)}
-            options={PROMPT_TEMPLATES.map(t => ({ value: t.id, label: t.label[lang] }))}
+            options={phaseTemplates.map(t => ({ value: t.id, label: t.label[lang] }))}
           />
         </div>
 
