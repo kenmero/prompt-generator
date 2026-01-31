@@ -4,13 +4,17 @@ import { Button } from './components/Button';
 import { Select } from './components/Select';
 import { DynamicForm } from './components/DynamicForm';
 import { PromptPreview } from './components/PromptPreview';
-import { PROMPT_TEMPLATES } from './lib/promptConfig';
-import type { Language, PromptPhase } from './lib/promptConfig';
+import { PROMPT_TEMPLATES, TARGET_PLATFORMS } from './lib/promptConfig';
+import type { Language, PromptPhase, TargetPlatform } from './lib/promptConfig';
 import { generateMetaPrompt } from './lib/generator';
 
 function App() {
   const [lang, setLang] = useState<Language>('ja');
   const [phase, setPhase] = useState<PromptPhase>('initial');
+
+  // New State for Target Platform
+  const [targetPlatform, setTargetPlatform] = useState<TargetPlatform>('generic');
+  const [customPlatform, setCustomPlatform] = useState('');
 
   // Filter templates by phase
   const phaseTemplates = useMemo(() =>
@@ -73,7 +77,7 @@ function App() {
   };
 
   const handleGenerate = () => {
-    const prompt = generateMetaPrompt(currentTemplate, formData, isVibeCoding, lang);
+    const prompt = generateMetaPrompt(currentTemplate, formData, isVibeCoding, lang, targetPlatform, customPlatform);
     setResult(prompt);
     // Smooth scroll to bottom
     setTimeout(() => {
@@ -202,13 +206,47 @@ function App() {
           </button>
         </div>
 
-        <div style={{ marginBottom: '2rem' }}>
-          <Select
-            label={UI_TEXT.goalLabel[lang]}
-            value={selectedTemplateId}
-            onChange={(e) => handleTemplateChange(e.target.value)}
-            options={phaseTemplates.map(t => ({ value: t.id, label: t.label[lang] }))}
-          />
+        <div style={{ marginBottom: '1.5rem', display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
+          <div style={{ flex: 1, minWidth: '200px' }}>
+            <Select
+              label={UI_TEXT.goalLabel[lang]}
+              value={selectedTemplateId}
+              onChange={(e) => handleTemplateChange(e.target.value)}
+              options={phaseTemplates.map(t => ({ value: t.id, label: t.label[lang] }))}
+            />
+          </div>
+
+          <div style={{ flex: 1, minWidth: '200px' }}>
+            <Select
+              label={lang === 'ja' ? 'ターゲットAI (最適化)' : 'Target AI (Optimization)'}
+              value={targetPlatform}
+              onChange={(e) => setTargetPlatform(e.target.value as TargetPlatform)}
+              options={TARGET_PLATFORMS.map(p => ({ value: p.id, label: p.label }))}
+            />
+          </div>
+
+          {targetPlatform === 'other' && (
+            <div style={{ flex: 1, minWidth: '200px' }}>
+              <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', color: 'hsl(var(--color-text-muted))' }}>
+                {lang === 'ja' ? 'AIの名称 (例: Llama 3)' : 'AI Name (e.g. Llama 3)'}
+              </label>
+              <input
+                type="text"
+                value={customPlatform}
+                onChange={(e) => setCustomPlatform(e.target.value)}
+                placeholder={lang === 'ja' ? 'AIの名前を入力...' : 'Enter AI Name...'}
+                style={{
+                  width: '100%',
+                  padding: '0.5rem',
+                  borderRadius: 'var(--radius-sm)',
+                  border: '1px solid var(--glass-border)',
+                  background: 'rgba(0, 0, 0, 0.2)',
+                  color: 'hsl(var(--color-text-base))',
+                  fontSize: '1rem'
+                }}
+              />
+            </div>
+          )}
         </div>
 
         <div style={{ padding: '1.5rem', background: 'rgba(15, 23, 42, 0.3)', borderRadius: 'var(--radius-md)', border: '1px solid var(--glass-border)' }}>
