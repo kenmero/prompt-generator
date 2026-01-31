@@ -24,8 +24,8 @@ export const generateMetaPrompt = (
             let instruction = '';
             if (targetPlatform === 'other' && customPlatformName.trim()) {
                 instruction = isJa
-                    ? `以下の指示は、AIアシスタント「${customPlatformName}」に対して最適化されたプロンプトを作成するために使用してください。\n`
-                    : `Please use the following instructions to create a prompt optimized for the AI assistant "${customPlatformName}".\n`;
+                    ? `作成するプロンプトは、AIアシスタント「${customPlatformName}」に対して最適化してください。「${customPlatformName}」の特性や強みを活かすような指示を含めてください。\n`
+                    : `Please optimize the generated prompt for the AI assistant "${customPlatformName}". Include instructions that leverage the specific strengths and characteristics of "${customPlatformName}".\n`;
             } else {
                 instruction = isJa ? platformConfig.instruction.ja : platformConfig.instruction.en;
             }
