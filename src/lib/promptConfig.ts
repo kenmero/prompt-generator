@@ -44,8 +44,8 @@ export const TARGET_PLATFORMS: PlatformConfig[] = [
         label: 'Antigravity (Google)',
         description: { ja: 'エージェント/ツール利用重視', en: 'Agentic behavior & Tool use' },
         instruction: {
-            ja: '作成するシステムプロンプトでは、AIに対して「GoogleのAntigravityエージェントとして振る舞うこと」を指示してください。ツール利用、自律的なタスク遂行、Artifactの活用を重視し、ユーザーの介入を最小限に抑えるエージェントらしい挙動を定義してください。',
-            en: 'Ensure the generated System Prompt instructs the AI to act as a Google Antigravity agent. Define behaviors that prioritize tool usage, autonomous task execution, and artifact creation, minimizing user intervention.'
+            ja: '作成するプロンプトは、GoogleのAntigravityエージェントに向けた指示として最適化してください。Antigravityの強みである「ツール利用」「自律的なタスク遂行」「Artifactの生成」を前提とし、これらを最大限に活用してタスクを解決するよう促す内容にしてください。',
+            en: 'Optimize the generated prompt for Google\'s Antigravity agent. Instruct the AI to fully leverage its strengths in tool usage, autonomous task execution, and artifact creation to solve the task.'
         }
     },
     {
