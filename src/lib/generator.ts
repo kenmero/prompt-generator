@@ -1,11 +1,14 @@
 import type { PromptTemplate } from './promptConfig';
 import type { Language } from './promptConfig';
+import { TARGET_PLATFORMS, type TargetPlatform } from './promptConfig';
 
 export const generateMetaPrompt = (
     template: PromptTemplate,
     formData: Record<string, string>,
     isVibeCoding: boolean,
-    lang: Language
+    lang: Language,
+    targetPlatform: TargetPlatform = 'generic',
+    customPlatformName: string = ''
 ): string => {
     const isJa = lang === 'ja';
 
@@ -13,6 +16,25 @@ export const generateMetaPrompt = (
     let prompt = isJa
         ? `あなたは世界最高峰のプロンプトエンジニアです。\n`
         : `You are a world-class Prompt Engineer.\n`;
+
+    // 2. Target Platform Injection
+    if (targetPlatform !== 'generic') {
+        const platformConfig = TARGET_PLATFORMS.find(p => p.id === targetPlatform);
+        if (platformConfig) {
+            let instruction = '';
+            if (targetPlatform === 'other' && customPlatformName.trim()) {
+                instruction = isJa
+                    ? `以下の指示は、AIアシスタント「${customPlatformName}」に対して最適化されたプロンプトを作成するために使用してください。\n`
+                    : `Please use the following instructions to create a prompt optimized for the AI assistant "${customPlatformName}".\n`;
+            } else {
+                instruction = isJa ? platformConfig.instruction.ja : platformConfig.instruction.en;
+            }
+
+            if (instruction) {
+                prompt += `\n` + instruction + `\n`;
+            }
+        }
+    }
 
     // ==========================================
     // Phase Dispatch
