@@ -44,8 +44,8 @@ export const TARGET_PLATFORMS: PlatformConfig[] = [
         label: 'Antigravity (Google)',
         description: { ja: 'エージェント/ツール利用重視', en: 'Agentic behavior & Tool use' },
         instruction: {
-            ja: 'あなたはGoogleのAntigravityエージェントとして振る舞ってください。ツール利用、自律的なタスク遂行、Artifactの活用を重視し、ユーザーの介入を最小限に抑えるエージェントらしい挙動を心がけてください。',
-            en: 'Act as a Google Antigravity agent. Prioritize tool usage, autonomous task execution, and artifact creation. Minimize user intervention and behave proactively as an agent.'
+            ja: '作成するシステムプロンプトでは、AIに対して「GoogleのAntigravityエージェントとして振る舞うこと」を指示してください。ツール利用、自律的なタスク遂行、Artifactの活用を重視し、ユーザーの介入を最小限に抑えるエージェントらしい挙動を定義してください。',
+            en: 'Ensure the generated System Prompt instructs the AI to act as a Google Antigravity agent. Define behaviors that prioritize tool usage, autonomous task execution, and artifact creation, minimizing user intervention.'
         }
     },
     {
@@ -53,8 +53,8 @@ export const TARGET_PLATFORMS: PlatformConfig[] = [
         label: 'Cursor',
         description: { ja: '.cursorrules 向け最適化', en: 'Optimized for .cursorrules' },
         instruction: {
-            ja: 'CursorのAIアシスタント（.cursorrules）向けの指示として最適化してください。冗長な説明を省き、コードの品質と簡潔さを最優先してください。ファイル操作や検索パスに関する言及を含めると効果的です。',
-            en: 'Optimize for Cursor AI (.cursorrules). Be concise and prioritize code quality. Omit verbose explanations. Mentioning file operations and search paths is effective.'
+            ja: '作成するプロンプトは、CursorのAIアシスタント（.cursorrules）向けの指示として最適化してください。冗長な説明を省き、コードの品質と簡潔さを最優先するようAIに指示する内容にしてください。',
+            en: 'Optimize the generated prompt for Cursor AI (.cursorrules). Instruct the AI to be concise, prioritize code quality, and omit verbose explanations.'
         }
     },
     {
@@ -62,8 +62,8 @@ export const TARGET_PLATFORMS: PlatformConfig[] = [
         label: 'Claude (Anthropic)',
         description: { ja: 'XMLタグ構造重視', en: 'XML Tag structure focus' },
         instruction: {
-            ja: 'Claude向けに最適化してください。指示、文脈、入力データを明確に分離するために、XMLタグ（<context>, <instruction>, <example>など）を積極的に使用してください。',
-            en: 'Optimize for Claude. Use XML tags (e.g., <context>, <instruction>, <example>) extensively to clearly separate instructions, context, and input data.'
+            ja: '作成するプロンプトは、Claude向けに最適化してください。AIに対し、XMLタグ（<context>, <instruction>, <example>など）を用いて出力や思考プロセスを構造化するよう指示する内容を含めてください。',
+            en: 'Optimize the generated prompt for Claude. Instruct the AI to extensively use XML tags (e.g., <context>, <instruction>, <example>) to clearly separate instructions and structure its output.'
         }
     },
     {
@@ -71,8 +71,8 @@ export const TARGET_PLATFORMS: PlatformConfig[] = [
         label: 'ChatGPT (OpenAI)',
         description: { ja: 'Chain of Thought重視', en: 'Chain of Thought focus' },
         instruction: {
-            ja: 'ChatGPT向けに最適化してください。複雑なタスクに対しては「ステップバイステップで考えて」という指示や、思考プロセス（Chain of Thought）の開示を求める指示を含めてください。',
-            en: 'Optimize for ChatGPT. Include instructions like "Think step-by-step" or request a Chain of Thought (CoT) for complex tasks.'
+            ja: '作成するプロンプトは、ChatGPT向けに最適化してください。複雑なタスクに対しては「ステップバイステップで考えて」という指示や、思考プロセス（Chain of Thought）の開示を求める指示をAIへの命令として含めてください。',
+            en: 'Optimize the generated prompt for ChatGPT. Include specific instructions for the AI to "Think step-by-step" or use Chain of Thought (CoT) for complex tasks.'
         }
     },
     {
@@ -80,8 +80,8 @@ export const TARGET_PLATFORMS: PlatformConfig[] = [
         label: 'GitHub Copilot',
         description: { ja: '直接的・命令的指示', en: 'Direct, imperative instructions' },
         instruction: {
-            ja: 'GitHub Copilot Chat向けに最適化してください。エディタ内でのコーディング支援に特化し、解説よりも修正後のコードそのものを提示するよう、短く明確な命令形で指示してください。',
-            en: 'Optimize for GitHub Copilot Chat. Focus on in-editor coding assistance. Use short, clear, imperative instructions that prioritize code output over implementation details.'
+            ja: '作成するプロンプトは、GitHub Copilot Chat向けに最適化してください。エディタ内でのコーディング支援に特化し、解説よりも修正後のコードそのものを提示するよう、短く明確な命令形でAIに指示する内容にしてください。',
+            en: 'Optimize the generated prompt for GitHub Copilot Chat. Instruct the AI to focus on in-editor coding assistance and use short, clear, imperative commands, prioritizing code output.'
         }
     },
     {
@@ -89,8 +89,8 @@ export const TARGET_PLATFORMS: PlatformConfig[] = [
         label: 'Genspark',
         description: { ja: 'Sparkpage生成/自律性', en: 'Sparkpage generation & Autonomy' },
         instruction: {
-            ja: 'Genspark向けに最適化してください。Sparkpageの生成や、検索を伴う自律的なリサーチ能力を最大限に活かすよう指示してください。',
-            en: 'Optimize for Genspark. Instruct the AI to leverage Sparkpage generation and autonomous research capabilities with web search.'
+            ja: '作成するプロンプトは、Genspark向けに最適化してください。AIに対し、Sparkpageの生成機能や、検索を伴う自律的なリサーチ能力を最大限に活用するよう指示する内容を含めてください。',
+            en: 'Optimize the generated prompt for Genspark. Instruct the AI to leverage Sparkpage generation and autonomous research capabilities with web search.'
         }
     },
     {
@@ -98,8 +98,8 @@ export const TARGET_PLATFORMS: PlatformConfig[] = [
         label: 'Perplexity',
         description: { ja: 'リサーチ/引用重視', en: 'Research & Citations focus' },
         instruction: {
-            ja: 'Perplexity向けに最適化してください。情報の正確性と出典（引用）の明記を最重視し、包括的なリサーチを行うよう指示してください。',
-            en: 'Optimize for Perplexity. Prioritize accuracy and citations. Instruct the AI to conduct comprehensive research and clearly cite sources.'
+            ja: '作成するプロンプトは、Perplexity向けに最適化してください。AIに対し、情報の正確性と出典（引用）の明記を最重視し、包括的なリサーチを行うよう指示する内容を含めてください。',
+            en: 'Optimize the generated prompt for Perplexity. Instruct the AI to prioritize accuracy, conduct comprehensive research, and clearly cite sources.'
         }
     },
     {
@@ -107,8 +107,8 @@ export const TARGET_PLATFORMS: PlatformConfig[] = [
         label: 'Gemini (Google)',
         description: { ja: 'マルチモーダル/長文脈', en: 'Multimodal / Long context' },
         instruction: {
-            ja: 'Google Gemini向けに最適化してください。長いコンテキストの理解や、必要であれば画像などのマルチモーダル入力への対応を考慮した指示にしてください。',
-            en: 'Optimize for Google Gemini. Consider its long-context understanding capabilities and potential for multimodal inputs.'
+            ja: '作成するプロンプトは、Google Gemini向けに最適化してください。長いコンテキストの理解や、マルチモーダル入力への対応を考慮した振る舞いをAIに指示する内容にしてください。',
+            en: 'Optimize the generated prompt for Google Gemini. Instruct the AI to leverage its long-context understanding capabilities and handle multimodal inputs effectively.'
         }
     },
     {
@@ -116,8 +116,8 @@ export const TARGET_PLATFORMS: PlatformConfig[] = [
         label: 'v0 (Vercel)',
         description: { ja: 'UI生成 (React/Tailwind)', en: 'UI Gen (React/Tailwind)' },
         instruction: {
-            ja: 'v0.dev向けに最適化してください。最新のReact、Tailwind CSS、shadcn/uiを使用したモダンで美しいUIコンポーネントを生成するよう指示してください。',
-            en: 'Optimize for v0.dev. Instruct the AI to generate modern, beautiful UI components using the latest React, Tailwind CSS, and shadcn/ui.'
+            ja: '作成するプロンプトは、v0.dev向けに最適化してください。AIに対し、最新のReact、Tailwind CSS、shadcn/uiを使用したモダンで美しいUIコンポーネントを生成するよう指示する内容を含めてください。',
+            en: 'Optimize the generated prompt for v0.dev. Instruct the AI to generate modern, beautiful UI components using the latest React, Tailwind CSS, and shadcn/ui.'
         }
     },
     {
